@@ -1,0 +1,21 @@
+# Choose the parameter to vary (e.g., volatility)
+volatility_values = np.linspace(data['volatility'].min(), data['volatility'].max(), 100)
+
+# Create bifurcation data
+predicted_close = []
+for vol in volatility_values:
+    # Create synthetic input with varied volatility
+    synthetic_input = np.mean(X_scaled, axis=0)  # Use average values for other features
+    synthetic_input[-1] = vol  # Modify the last feature (volatility)
+    synthetic_input = synthetic_input.reshape(1, -1)
+
+    # Predict
+    pred = model.predict(synthetic_input)
+    predicted_close.append(pred[0, 0])
+plt.figure(figsize=(10, 6))
+plt.plot(volatility_values, predicted_close, 'b.', alpha=0.6)
+plt.title("Bifurcation Map: Volatility vs Predicted Close")
+plt.xlabel("Volatility")
+plt.ylabel("Predicted Close Price")
+plt.grid(True)
+plt.show()
